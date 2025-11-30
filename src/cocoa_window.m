@@ -574,6 +574,18 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)keyDown:(NSEvent *)event
 {
+    if ([self hasMarkedText] || [markedText length] > 0)
+    {
+        // printf("With markedText, len: %lu\n", (unsigned long)[markedText length]);
+        
+        // // output marked text for debugging
+        // NSString* text = [markedText string];
+        // printf("markedText content: %s\n", [text UTF8String]);
+        
+        [self interpretKeyEvents:@[event]];
+        return;
+    }
+
     const int key = translateKey([event keyCode]);
     const int mods = translateFlags([event modifierFlags]);
 
@@ -721,6 +733,8 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)insertText:(id)string replacementRange:(NSRange)replacementRange
 {
+    [self unmarkText];
+
     NSString* characters;
     NSEvent* event = [NSApp currentEvent];
     const int mods = translateFlags([event modifierFlags]);
