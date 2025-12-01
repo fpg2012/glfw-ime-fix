@@ -606,6 +606,9 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)keyUp:(NSEvent *)event
 {
+    if ([self hasMarkedText] || [markedText length] > 0)
+        return;
+
     const int key = translateKey([event keyCode]);
     const int mods = translateFlags([event modifierFlags]);
     _glfwInputKey(window, key, [event keyCode], GLFW_RELEASE, mods);
