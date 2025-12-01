@@ -30,6 +30,7 @@
 
 #include <float.h>
 #include <string.h>
+// #include <stdio.h>
 
 // HACK: This enum value is missing from framework headers on OS X 10.11 despite
 //       having been (according to documentation) added in Mac OS X 10.7
@@ -561,6 +562,18 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)keyDown:(NSEvent *)event
 {
+    if ([self hasMarkedText] || [markedText length] > 0)
+    {
+        // printf("With markedText, len: %lu\n", (unsigned long)[markedText length]);
+        
+        // // 还可以输出标记文本内容
+        // NSString* text = [markedText string];
+        // printf("markedText content: %s\n", [text UTF8String]);
+        
+        [self interpretKeyEvents:@[event]];
+        return;
+    }
+
     const int key = translateKey([event keyCode]);
     const int mods = translateFlags([event modifierFlags]);
 
@@ -708,6 +721,8 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)insertText:(id)string replacementRange:(NSRange)replacementRange
 {
+    [self unmarkText];
+
     NSString* characters;
     NSEvent* event = [NSApp currentEvent];
     const int mods = translateFlags([event modifierFlags]);
