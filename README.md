@@ -15,7 +15,8 @@ cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=release
 ```
 
 如果您正在使用wayland，minecraft可能会优先调用wayland 选项，但是目前并没有wayland支持，因此只能在编译时禁用wayland支持强制让游戏使用xwayland
-使用以下指令来生辰禁用wayland的编译模板：
+
+使用以下指令来生成禁用wayland的编译模板：
 
 ```
 cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=release -DGLFW_BUILD_WAYLAND=0
