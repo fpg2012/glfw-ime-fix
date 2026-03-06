@@ -14,6 +14,14 @@ cd build
 cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=release
 ```
 
+如果您正在使用wayland，minecraft可能会优先调用wayland 选项，但是目前并没有wayland支持，因此只能在编译时禁用wayland支持强制让游戏使用xwayland
+
+使用以下指令来生成禁用wayland的编译模板：
+
+```
+cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=release -DGLFW_BUILD_WAYLAND=0
+```
+
 ## For Minecraft
 
 下面将minecraft安装文件夹记为 `${MINECRAFT}`。在Linux下一般是 `~/.minecraft`，在MacOS下一般是`~/Library/Application\ Support/minecraft`。
@@ -35,7 +43,7 @@ mkdir repack
 将解压出来的文件移动到刚创建的repack文件夹里（后续操作全部在repack文件夹下执行）。
 
 ```
-mv macos METE-INF -t repack
+mv macos META-INF -t repack
 ```
 
 进入repack文件夹，用刚刚本项目编译出的dylib替换macos文件夹下的libglfw.dylib（文件名保持libglfw.dylib不变）。
@@ -61,10 +69,18 @@ mv lwjgl-glfw-3.3.3-natives-macos-arm64.jar ..
 
 ### Linux
 
+```bash
+cd ${MINECRAFT}/libraries/org/lwjgl/lwjgl-glfw/3.3.3/
+jar xf lwjgl-glfw-3.3.3-natives-linux-x86.jar
+mkdir repack
+```
+
+注: 某些情况下可能为`lwjgl-glfw-3.3.3-natives-linux.jar`,这种情况下只需要将所有`-x86`删掉即可
+
 将解压出来的文件移动到刚创建的repack文件夹里（后续操作全部在repack文件夹下执行）。
 
 ```
-mv linux METE-INF -t repack
+mv linux META-INF -t repack
 ```
 
 进入repack文件夹，用刚刚本项目编译出的动态链接库`.so`替换linux文件夹下的libglfw.so（文件名保持libglfw.so不变）。
@@ -83,7 +99,7 @@ shasum linux/x64/org/lwjgl/glfw/libglfw.so | cut -d' ' -f1 > META-INF/linux/x64/
 
 ```
 fastjar cf lwjgl-glfw-3.3.3-natives-linux-x64.jar .
-mv lwjgl-glfw-3.3.3-natives--linux-x64.jar ..
+mv lwjgl-glfw-3.3.3-natives-linux-x64.jar ..
 ```
 
 到此就完成了。
